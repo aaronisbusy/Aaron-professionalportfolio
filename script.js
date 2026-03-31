@@ -105,17 +105,29 @@ window.addEventListener('scroll', () => {
 // =============================================
 // 4. SCROLL REVEAL (IntersectionObserver)
 // =============================================
+const revealTargets = document.querySelectorAll('.hidden');
+
+revealTargets.forEach((el) => {
+    if (el.classList.contains('section-header-container')) {
+        el.classList.add('from-up');
+    } else if (el.classList.contains('skills-grid')) {
+        el.classList.add('scale-up');
+    } else if (el.classList.contains('project-switcher')) {
+        el.classList.add('from-right');
+    } else if (el.classList.contains('cert-carousel')) {
+        el.classList.add('from-left');
+    } else {
+        el.classList.add('from-up');
+    }
+});
+
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('show');
-            // Once shown, no need to observe anymore
-            observer.unobserve(entry.target);
-        }
+        entry.target.classList.toggle('show', entry.isIntersecting);
     });
-}, { threshold: 0.12 });
+}, { threshold: 0.16, rootMargin: '0px 0px -8% 0px' });
 
-document.querySelectorAll('.hidden').forEach(el => observer.observe(el));
+revealTargets.forEach(el => observer.observe(el));
 
 // =============================================
 // 5. CURSOR GLOW EFFECT
@@ -231,7 +243,7 @@ if (projectSwitcher && projectSlides.length > 1 && projectNextButtons.length) {
             currentSlide.classList.remove('is-exit-left');
             activeIndex = nextIndex;
             projectNextButtons.forEach(btn => (btn.disabled = false));
-        }, 580);
+        }, 820);
     };
 
     projectNextButtons.forEach(btn => btn.addEventListener('click', switchToNext));
